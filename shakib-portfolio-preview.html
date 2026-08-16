@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>guest@shakib ~ %</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --text:#e6e6e6;
+    --text-dim:#9a9a9a;
+    --muted:#5c5c5c;
+    --border:#1c1c1c;
+    --accent:#39ff8c;
+    --accent-dim:#1e8a53;
+    --mono:'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--mono);height:100%;}
+  body{height:100vh; overflow:hidden;}
+  ::selection{background:var(--accent);color:#04120a;}
+  a{color:var(--text); text-decoration:none; border-bottom:1px solid var(--accent-dim);}
+  a:hover{color:var(--accent); border-bottom-color:var(--accent);}
+
+  #shell{display:flex; flex-direction:column; height:100vh;}
+  #screen{
+    flex:1; overflow-y:auto; padding:56px 24px 20px; max-width:720px; width:100%; margin:0 auto;
+  }
+  #screen::-webkit-scrollbar{width:6px;}
+  #screen::-webkit-scrollbar-thumb{background:var(--border); border-radius:3px;}
+
+  /* sys header */
+  .sysinfo{font-size:13px; line-height:2; margin-bottom:44px;}
+  .sysinfo .row{display:flex; gap:14px;}
+  .sysinfo .k{color:var(--muted); width:78px; flex-shrink:0;}
+  .sysinfo .v{color:var(--text-dim);}
+  .sysinfo .v.on{color:var(--accent);}
+
+  /* logo */
+  .logo{margin-bottom:44px;}
+  .logo .l1{font-size:38px; font-weight:700; letter-spacing:2px; color:var(--text); line-height:1;}
+  .logo .l2{font-size:15px; font-weight:300; letter-spacing:16px; color:var(--muted); margin-top:8px; padding-left:3px;}
+  .logo .rule{width:100%; height:1px; background:var(--border); margin-top:22px;}
+
+  /* command blocks */
+  .cmdline{font-size:13px; color:var(--text-dim); margin:0 0 16px;}
+  .cmdline .p{color:var(--accent); margin-right:8px;}
+
+  .out{font-size:13px; line-height:1.85; color:var(--text-dim); margin-bottom:40px;}
+  .out .hl{color:var(--text);}
+  .out .accent{color:var(--accent);}
+
+  .kv{font-size:13px; line-height:2;}
+  .kv .row{display:flex; gap:14px;}
+  .kv .k{color:var(--muted); width:88px; flex-shrink:0; text-transform:uppercase; letter-spacing:.04em; font-size:11.5px; padding-top:2px;}
+  .kv .v{color:var(--text-dim);}
+
+  .pill{
+    display:inline-flex; align-items:center; gap:8px; font-size:11.5px; color:var(--text-dim);
+    border:1px solid var(--border); border-radius:20px; padding:6px 14px; margin-bottom:44px;
+    letter-spacing:.03em;
+  }
+  .pill .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 6px var(--accent); animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+  /* echoed commands + responses */
+  .echo{font-size:13px; margin:34px 0 12px;}
+  .echo .p{color:var(--accent); margin-right:8px;}
+  .echo .cmdtext{color:var(--text);}
+  .resp{font-size:13px; line-height:1.85; color:var(--text-dim); white-space:pre-wrap;}
+  .resp .hl{color:var(--text);}
+  .resp .accent{color:var(--accent);}
+  .resp .muted{color:var(--muted);}
+  .err{font-size:13px; color:#e2685f;}
+
+  table.ls{border-collapse:collapse; font-size:13px;}
+  table.ls td{padding:2px 18px 2px 0; vertical-align:top; color:var(--text-dim);}
+  table.ls td.fname{color:var(--text);}
+  table.ls td.fdesc{color:var(--muted);}
+
+  /* input */
+  .inputbar{
+    max-width:720px; width:100%; margin:0 auto; padding:16px 24px 26px; flex-shrink:0;
+    border-top:1px solid var(--border);
+  }
+  .promptline{display:flex; align-items:center; gap:10px;}
+  .promptline .p{color:var(--accent); font-size:13px;}
+  .promptline input{
+    flex:1; background:transparent; border:none; color:var(--text); font-family:var(--mono);
+    font-size:13px; caret-color:var(--accent);
+  }
+  .promptline input::placeholder{color:var(--muted);}
+  .promptline input:focus{outline:none;}
+</style>
+</head>
+<body>
+
+<div id="shell">
+  <div id="screen">
+
+    <div class="sysinfo">
+      <div class="row"><span class="k">SYS.NAME</span><span class="v">SKRLS_TERM v1.0.0</span></div>
+      <div class="row"><span class="k">SYS.AUTH</span><span class="v on">GUEST_ACCESS_GRANTED</span></div>
+      <div class="row"><span class="k">SYS.NODE</span><span class="v">github.com/shakib-SKRLS</span></div>
+    </div>
+
+    <div class="logo">
+      <div class="l1">SHAKIB</div>
+      <div class="l2">KHAN</div>
+      <div class="rule"></div>
+    </div>
+
+    <div class="cmdline"><span class="p">$</span>whoami</div>
+    <div class="out">Backend developer who thinks in systems and tries to break them on purpose. <span class="hl">CEH v13 certified</span> — security isn't a checklist I bolt on at the end, it's part of how I design things from the first schema.
+
+4+ years across JavaScript, Python, Rust, and Go — building APIs, auth services, and security tooling. Currently bootstrapping <span class="hl">my own startup</span>.</div>
+
+    <div class="cmdline"><span class="p">$</span>cat status.txt</div>
+    <div class="kv" style="margin-bottom:28px;">
+      <div class="row"><span class="k">Focus</span><span class="v">Backend systems — API design — Security</span></div>
+      <div class="row"><span class="k">Stack</span><span class="v">Node · Express · Django · Docker · PostgreSQL</span></div>
+      <div class="row"><span class="k">Contact</span><span class="v"><a href="mailto:skrlskhan123@gmail.com">skrlskhan123@gmail.com</a></span></div>
+    </div>
+
+    <div class="pill"><span class="dot"></span>AVAILABLE — OPEN TO FREELANCE / CONTRACTS</div>
+
+  </div>
+
+  <div class="inputbar">
+    <div class="promptline">
+      <span class="p">guest@shakib:~$</span>
+      <input id="termInput" type="text" autocomplete="off" spellcheck="false" placeholder="type a command (try: help)" autofocus />
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================== VIRTUAL FILESYSTEM ================== */
+const fs = {
+  'about.md': { desc:'who I am',
+    content:`Backend developer who thinks in systems and tries to break them on purpose.
+<span class="hl">CEH v13 certified</span> — security isn't a checklist I bolt on at the
+end, it's part of how I design things from the first schema.
+
+Most of what I build lives on the server: APIs, auth services, data
+pipelines. I care about the boring things that make backend work good —
+clear service boundaries, sane error handling, and not leaving doors
+unlocked because nobody checked.
+
+Currently bootstrapping my own startup. Open to freelance, collabs, and
+contract work — response time under 24 hours.` },
+  'skills.json': { desc:'tech stack',
+    content:`{
+  <span class="hl">"languages"</span>: ["JavaScript", "Python", "Rust", "Go", "C++", "Bash"],
+  <span class="hl">"backend"</span>: ["Node.js", "Express", "Django", "Docker", "MongoDB", "PostgreSQL"],
+  <span class="hl">"security"</span>: ["Kali Linux", "Burp Suite", "Wireshark", "Metasploit", "CEH v13"]
+}` },
+  'contact.json': { desc:'reach me',
+    content:`{
+  <span class="hl">"github"</span>   : "<a href="https://github.com/shakib-SKRLS" target="_blank" rel="noopener">github.com/shakib-SKRLS</a>",
+  <span class="hl">"linkedin"</span> : "<a href="https://www.linkedin.com/in/shakib-khan-810265237/" target="_blank" rel="noopener">in/shakib-khan-810265237</a>",
+  <span class="hl">"email"</span>    : "<a href="mailto:skrlskhan123@gmail.com">skrlskhan123@gmail.com</a>"
+}` },
+  'projects': { dir:true, children:{
+      'Cyber_security.md': { desc:'security tooling',
+        content:`<span class="hl">Cyber_security</span>  <span class="muted">[Python]</span>
+
+Collection of offensive/defensive security exercises and tooling — recon,
+scanning, and vulnerability-assessment scripts.
+
+role    Solo — research + scripting
+focus   Applying CEH v13 methodology hands-on in a controlled lab.
+repo    <a href="https://github.com/shakib-SKRLS/Cyber_security" target="_blank" rel="noopener">github.com/shakib-SKRLS/Cyber_security</a>` },
+      'Herb-supply-chain.md': { desc:'supply-chain transparency app',
+        content:`<span class="hl">Herb-supply-chain</span>  <span class="muted">[JavaScript]</span>
+
+Web platform bringing transparency between herb suppliers and consumers.
+
+role    Backend + API design
+focus   Traceability from supplier to consumer — auth and data integrity.
+repo    <a href="https://github.com/shakib-SKRLS/Herb-supply-chain" target="_blank" rel="noopener">github.com/shakib-SKRLS/Herb-supply-chain</a>` },
+      'system-auditing-tool.md': { desc:'config/security audit CLI',
+        content:`<span class="hl">system-auditing-tool</span>  <span class="muted">[Python]</span>
+
+Audits system configuration and surfaces security-relevant misconfigurations.
+
+role    Solo — build
+focus   Automated checks against common hardening baselines.
+repo    <a href="https://github.com/shakib-SKRLS/system-auditing-tool" target="_blank" rel="noopener">github.com/shakib-SKRLS/system-auditing-tool</a>` },
+      'FlightAndSearchService.md': { desc:'flight search backend',
+        content:`<span class="hl">FlightAndSearchService</span>  <span class="muted">[JavaScript]</span>
+
+Backend service for flight search — query handling and results aggregation.
+
+role    Backend service design
+focus   API layer structured the way a real booking backend would be.
+repo    <a href="https://github.com/shakib-SKRLS/FlightAndSearchService" target="_blank" rel="noopener">github.com/shakib-SKRLS/FlightAndSearchService</a>` },
+      'Auth_SERVICE.md': { desc:'authentication microservice',
+        content:`<span class="hl">Auth_SERVICE</span>  <span class="muted">[JavaScript]</span>
+
+Standalone authentication service — tokens, sessions, access control.
+
+role    Solo — build
+focus   Security-first auth as a reusable service other apps sit behind.
+repo    <a href="https://github.com/shakib-SKRLS/Auth_SERVICE" target="_blank" rel="noopener">github.com/shakib-SKRLS/Auth_SERVICE</a>` },
+      'tick_tack_toe_rust.md': { desc:'Rust CLI warm-up project',
+        content:`<span class="hl">tick_tack_toe_rust</span>  <span class="muted">[Rust]</span>
+
+Tic-tac-toe in Rust — a systems-language warm-up project.
+
+role    Solo — learning project
+focus   Getting comfortable with Rust's ownership model.
+repo    <a href="https://github.com/shakib-SKRLS/tick_tack_toe_rust" target="_blank" rel="noopener">github.com/shakib-SKRLS/tick_tack_toe_rust</a>` },
+  }}
+};
+
+/* ================== TERMINAL ENGINE ================== */
+const screen = document.getElementById('screen');
+const input = document.getElementById('termInput');
+let history = [], hIndex = -1;
+
+function printHTML(html, cls){
+  const d = document.createElement('div');
+  d.className = cls || 'resp';
+  d.innerHTML = html;
+  screen.appendChild(d);
+  screen.scrollTop = screen.scrollHeight;
+}
+function printEcho(cmd){
+  const d = document.createElement('div');
+  d.className = 'echo';
+  d.innerHTML = `<span class="p">$</span><span class="cmdtext">${escapeHTML(cmd)}</span>`;
+  screen.appendChild(d);
+  screen.scrollTop = screen.scrollHeight;
+}
+function escapeHTML(s){ return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function lsRoot(){
+  let rows = '';
+  for(const key in fs){
+    const item = fs[key];
+    if(item.dir) rows += `<tr><td class="fname">${key}/</td><td class="fdesc">directory — ${Object.keys(item.children).length} case studies</td></tr>`;
+    else rows += `<tr><td class="fname">${key}</td><td class="fdesc">${item.desc}</td></tr>`;
+  }
+  return `<table class="ls">${rows}</table>`;
+}
+function lsProjects(){
+  let rows = '';
+  for(const key in fs.projects.children) rows += `<tr><td class="fname">${key}</td><td class="fdesc">${fs.projects.children[key].desc}</td></tr>`;
+  return `<table class="ls">${rows}</table>`;
+}
+
+const commands = {
+  help: () => `available commands:
+
+  whoami        // short bio
+  skills        // tech stack
+  projects      // list projects
+  contact       // github, linkedin, email
+  email         // copy email to clipboard
+  clear         // clear the screen
+
+<span class="muted">advanced: ls · cat &lt;file&gt; · open &lt;project-name&gt;</span>`,
+
+  whoami: () => fs['about.md'].content,
+  skills: () => fs['skills.json'].content,
+  contact: () => fs['contact.json'].content,
+  projects: () => lsProjects() + `\n<span class="muted">run "cat projects/&lt;name&gt;" for details, or "open &lt;name&gt;" for the repo.</span>`,
+
+  email: () => {
+    navigator.clipboard?.writeText('skrlskhan123@gmail.com').catch(()=>{});
+    return `copied <span class="hl">skrlskhan123@gmail.com</span> to clipboard`;
+  },
+
+  ls: (args) => {
+    const path = args.join(' ').trim();
+    if(!path) return lsRoot();
+    if(path.replace(/\/$/,'') === 'projects') return lsProjects();
+    return `<span class="err">ls: ${escapeHTML(path)}: no such directory</span>`;
+  },
+
+  cat: (args) => {
+    const path = args.join(' ').trim();
+    if(!path) return `<span class="err">usage: cat &lt;file&gt;</span>`;
+    const clean = path.replace(/^\.?\/?/, '');
+    if(fs[clean] && !fs[clean].dir) return fs[clean].content;
+    if(clean.startsWith('projects/')){
+      const fname = clean.split('/')[1];
+      if(fs.projects.children[fname]) return fs.projects.children[fname].content;
+    }
+    if(fs.projects.children[clean]) return fs.projects.children[clean].content;
+    return `<span class="err">cat: ${escapeHTML(path)}: no such file — try "ls"</span>`;
+  },
+
+  open: (args) => {
+    const name = args.join(' ').trim().replace(/\.md$/,'');
+    const match = Object.keys(fs.projects.children).find(k => k.replace(/\.md$/,'').toLowerCase() === name.toLowerCase());
+    if(!match) return `<span class="err">open: no project matching "${escapeHTML(name)}" — try "projects"</span>`;
+    const urlMatch = fs.projects.children[match].content.match(/href="([^"]+)"/);
+    if(urlMatch){ window.open(urlMatch[1], '_blank'); return `opening ${match.replace(/\.md$/,'')} on GitHub ...`; }
+    return `<span class="err">no repo link found</span>`;
+  },
+
+  clear: () => { screen.innerHTML=''; return null; },
+
+  'sudo hire-shakib': () => `[sudo] password for guest: ********\nPermission granted.\n<span class="hl">opening mailto:skrlskhan123@gmail.com ...</span>`,
+};
+
+function runCommand(raw){
+  const trimmed = raw.trim();
+  if(!trimmed) return;
+  printEcho(trimmed);
+  history.push(trimmed); hIndex = history.length;
+
+  const lower = trimmed.toLowerCase();
+  if(commands[lower]){
+    const res = commands[lower]();
+    if(res) printHTML(res);
+    if(lower === 'sudo hire-shakib') setTimeout(() => window.location.href='mailto:skrlskhan123@gmail.com', 900);
+    return;
+  }
+  const parts = trimmed.split(/\s+/);
+  const base = parts[0].toLowerCase();
+  const args = parts.slice(1);
+  if(commands[base]){
+    const res = commands[base](args);
+    if(res) printHTML(res);
+    return;
+  }
+  printHTML(`command not found: ${escapeHTML(trimmed)} — try <span class="hl">help</span>`, 'err');
+}
+
+input.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){ runCommand(input.value); input.value=''; }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); if(!history.length) return; hIndex=Math.max(0,hIndex-1); input.value=history[hIndex]||''; }
+  else if(e.key === 'ArrowDown'){ e.preventDefault(); if(!history.length) return; hIndex=Math.min(history.length,hIndex+1); input.value=history[hIndex]||''; }
+});
+document.addEventListener('click', () => input.focus());
+input.focus();
+</script>
+
+</body>
+</html>
