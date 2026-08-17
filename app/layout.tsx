@@ -10,12 +10,19 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "guest@shakib:~$",
+  title: {
+    default: "@shakib:~$",
+    template: "%s · guest@shakib",
+  },
   description:
     "Shakib Khan — Backend Developer & CEH v13 Certified Ethical Hacker. Interactive terminal portfolio.",
   authors: [{ name: "Shakib Khan", url: "https://github.com/shakib-SKRLS" }],
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
+  },
   openGraph: {
-    title: "Shakib Khan — Terminal Portfolio",
+    title: "guest@shakib:~$ · SKRLS_TERM",
     description:
       "Backend Developer · CEH v13 Certified · Interactive shell portfolio",
     type: "website",
