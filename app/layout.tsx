@@ -11,7 +11,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "@shakib:~$",
+    default: "guest@shakib:~$",
     template: "%s · guest@shakib",
   },
   description:

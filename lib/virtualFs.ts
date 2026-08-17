@@ -16,10 +16,9 @@ export interface CommandResult {
   output: string | null;
   html?: boolean;
   isError?: boolean;
-  sideEffect?: "clear" | "mailto" | "open" | "clipboard" | "download";
+  sideEffect?: "clear" | "mailto" | "open" | "clipboard";
   openUrl?: string;
   clipboardText?: string;
-  downloadName?: string;
 }
 
 export interface TerminalLine {
@@ -31,8 +30,6 @@ export interface TerminalLine {
 
 const GITHUB_USER = "shakib-SKRLS";
 const EMAIL = "skrlskhan123@gmail.com";
-export const RESUME_FILE = "Shakib_Khan_Resume.docx";
-export const RESUME_URL = `/${RESUME_FILE}`;
 
 const PROJECT_META: Record<
   string,
@@ -104,29 +101,15 @@ ${meta.body}
 repo    <a href="${repoUrl}" target="_blank" rel="noopener">${repoUrl.replace("https://", "")}</a>`;
 }
 
-function defaultMeta(name: string, language?: string) {
-  return {
-    desc: language ? `${language} project` : "GitHub repository",
-    language: language ?? "—",
-    body: `Repository from github.com/${GITHUB_USER}/${name}.`,
-  };
-}
-
 export function buildVirtualFs(
   githubRepos: { name: string; html_url: string; language: string | null }[] = []
 ): VirtualFs {
   const projects: Record<string, ProjectFile> = {};
   const repoMap = new Map(githubRepos.map((r) => [r.name, r]));
 
-  const allNames = new Set([
-    ...Object.keys(PROJECT_META),
-    ...githubRepos.map((r) => r.name),
-  ]);
-
-  for (const name of Array.from(allNames)) {
+  for (const name of Object.keys(PROJECT_META)) {
     const repo = repoMap.get(name);
-    const meta =
-      PROJECT_META[name] ?? defaultMeta(name, repo?.language ?? undefined);
+    const meta = PROJECT_META[name];
     const repoUrl =
       repo?.html_url ?? `https://github.com/${GITHUB_USER}/${name}`;
     const fname = projectFileName(name);
@@ -179,7 +162,6 @@ function lsRoot(fs: VirtualFs): string {
     `<tr><td class="fname">about.md</td><td class="fdesc">who I am</td></tr>`,
     `<tr><td class="fname">skills.json</td><td class="fdesc">tech stack</td></tr>`,
     `<tr><td class="fname">contact.json</td><td class="fdesc">reach me</td></tr>`,
-    `<tr><td class="fname">${RESUME_FILE}</td><td class="fdesc">download resume</td></tr>`,
     `<tr><td class="fname">projects/</td><td class="fdesc">directory — ${Object.keys(fs.projects).length} case studies</td></tr>`,
   ];
   return `<table class="ls">${rows.join("")}</table>`;
@@ -229,7 +211,6 @@ export function executeCommand(raw: string, fs: VirtualFs): CommandResult {
   skills        // tech stack
   projects      // list projects
   contact       // github, linkedin, email
-  resume        // download resume (.docx)
   email         // copy email to clipboard
   clear         // clear the screen
 
@@ -259,16 +240,6 @@ export function executeCommand(raw: string, fs: VirtualFs): CommandResult {
     };
   }
 
-  if (lower === "resume") {
-    return {
-      output: `downloading <span class="hl">${RESUME_FILE}</span> ...`,
-      html: true,
-      sideEffect: "download",
-      openUrl: RESUME_URL,
-      downloadName: RESUME_FILE,
-    };
-  }
-
   if (lower === "projects") {
     return {
       output:
@@ -282,7 +253,7 @@ export function executeCommand(raw: string, fs: VirtualFs): CommandResult {
     return { output: null, sideEffect: "clear" };
   }
 
-  if (lower === "sudo hire-shakib") {
+  if (lower === "sudo hire-hakib" || lower === "sudo hire-shakib") {
     return {
       output: `[sudo] password for guest: ********
 Permission granted.
@@ -321,14 +292,6 @@ Permission granted.
     if (clean === "about.md") return { output: fs.about, html: true };
     if (clean === "skills.json") return { output: fs.skills, html: true };
     if (clean === "contact.json") return { output: fs.contact, html: true };
-    if (
-      clean.toLowerCase() === RESUME_FILE.toLowerCase() ||
-      clean.toLowerCase() === "resume.docx"
-    )
-      return {
-        output: `binary file — run <span class="hl">resume</span> to download ${RESUME_FILE}`,
-        html: true,
-      };
 
     const project = resolveProjectFile(fs, path);
     if (project) return { output: project.content, html: true };

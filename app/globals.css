@@ -10,6 +10,7 @@
   --border: #1c1c1c;
   --accent: #39ff8c;
   --accent-dim: #1e8a53;
+  --accent-red: #ff4d4d;
 }
 
 html,
@@ -43,6 +44,33 @@ a.terminal-link:hover,
 .resp a:hover {
   color: var(--accent);
   border-bottom-color: var(--accent);
+}
+
+a.terminal-link:focus-visible,
+.terminal-out a:focus-visible,
+.resp a:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@keyframes blink-warning {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-blink-warning {
+  animation: blink-warning 1.2s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blink-warning {
+    animation: none !important;
+  }
 }
 
 @keyframes boot-line-in {

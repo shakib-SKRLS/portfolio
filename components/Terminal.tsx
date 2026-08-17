@@ -128,15 +128,6 @@ export default function Terminal({ fs }: TerminalProps) {
         navigator.clipboard?.writeText(result.clipboardText).catch(() => {});
       }
 
-      if (result.sideEffect === "download" && result.openUrl) {
-        const anchor = document.createElement("a");
-        anchor.href = result.openUrl;
-        anchor.download = result.downloadName ?? "resume.docx";
-        anchor.rel = "noopener";
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-      }
     },
     [fs]
   );
@@ -199,7 +190,7 @@ export default function Terminal({ fs }: TerminalProps) {
             enterKeyHint="go"
             placeholder="type a command (try: help)"
             aria-label="Terminal command input"
-            className="min-w-0 flex-1 border-none bg-transparent font-mono text-[13px] text-text caret-accent outline-none placeholder:text-muted focus:outline-none"
+            className="min-w-0 flex-1 border-none bg-transparent font-mono text-[13px] text-text caret-accent outline-none placeholder:text-muted focus:outline-none focus-visible:ring-1 focus-visible:ring-accent"
           />
         </div>
       </div>

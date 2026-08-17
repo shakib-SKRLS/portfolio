@@ -69,7 +69,10 @@ export default function TerminalHeader() {
             Contact
           </span>
           <span className="v text-text-dim">
-            <a href={`mailto:${EMAIL}`} className="terminal-link">
+            <a
+              href={`mailto:${EMAIL}`}
+              className="terminal-link focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent"
+            >
               {EMAIL}
             </a>
           </span>

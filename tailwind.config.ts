@@ -16,6 +16,7 @@ const config: Config = {
         border: "#1c1c1c",
         accent: "#39ff8c",
         "accent-dim": "#1e8a53",
+        "accent-red": "#ff4d4d",
       },
       fontFamily: {
         mono: ["var(--font-jetbrains-mono)", "ui-monospace", "monospace"],

@@ -2,21 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const SESSION_KEY = "shakib-portfolio-loaded";
-
-const LOADER_LINES = [
+const BOOT_LINES = [
   "initializing SKRLS_TERM v1.0.0",
+  "verifying decryption key .................... OK",
   "mounting /dev/github ........................ OK",
   "mounting /dev/linkedin ...................... OK",
   "checking credentials ........................ CEH v13 VERIFIED",
-  "starting shell .............................. OK",
+  "starting guest shell ........................ OK",
 ];
 
-interface StartupLoaderProps {
+interface TerminalBootLoaderProps {
   onComplete: () => void;
 }
 
-export default function StartupLoader({ onComplete }: StartupLoaderProps) {
+export default function TerminalBootLoader({ onComplete }: TerminalBootLoaderProps) {
   const [visibleLines, setVisibleLines] = useState<string[]>([]);
   const [progress, setProgress] = useState(0);
   const onCompleteRef = useRef(onComplete);
@@ -26,12 +25,12 @@ export default function StartupLoader({ onComplete }: StartupLoaderProps) {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    const hasSession = sessionStorage.getItem(SESSION_KEY) === "1";
 
-    if (reducedMotion || hasSession) {
-      sessionStorage.setItem(SESSION_KEY, "1");
-      onCompleteRef.current();
-      return;
+    if (reducedMotion) {
+      setVisibleLines(BOOT_LINES);
+      setProgress(100);
+      const timer = setTimeout(() => onCompleteRef.current(), 400);
+      return () => clearTimeout(timer);
     }
 
     let index = 0;
@@ -45,19 +44,18 @@ export default function StartupLoader({ onComplete }: StartupLoaderProps) {
     const showNext = () => {
       if (cancelled) return;
 
-      const line = LOADER_LINES[index];
+      const line = BOOT_LINES[index];
       if (!line) {
         setProgress(100);
         schedule(() => {
           if (cancelled) return;
-          sessionStorage.setItem(SESSION_KEY, "1");
           onCompleteRef.current();
-        }, 400);
+        }, 500);
         return;
       }
 
       setVisibleLines((prev) => [...prev, line]);
-      setProgress(Math.round(((index + 1) / LOADER_LINES.length) * 100));
+      setProgress(Math.round(((index + 1) / BOOT_LINES.length) * 100));
       index++;
       schedule(showNext, 120 + Math.random() * 80);
     };
@@ -123,5 +121,3 @@ function renderLine(line: string) {
 
   return line;
 }
-
-export { SESSION_KEY as LOADER_SESSION_KEY };
