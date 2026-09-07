@@ -1,14 +1,13 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
-import SessionGate from "@/components/SessionGate";
+import { useMemo, useState } from "react";
 import Terminal from "@/components/Terminal";
+import TerminalBootLoader from "@/components/TerminalBootLoader";
 import { buildVirtualFs } from "@/lib/virtualFs";
-import { isSessionRecovered, markSessionRecovered } from "@/lib/session";
 import githubRepos from "@/data/github-repos.json";
 import type { GitHubRepoEntry } from "@/data/github-repos";
 
-type Phase = "loading" | "gate" | "portfolio";
+type Phase = "loading" | "portfolio";
 
 export default function PortfolioShell() {
   const [phase, setPhase] = useState<Phase>("loading");
@@ -18,22 +17,9 @@ export default function PortfolioShell() {
     []
   );
 
-  useEffect(() => {
-    setPhase(isSessionRecovered() ? "portfolio" : "gate");
-  }, []);
-
-  const handleGateComplete = () => {
-    markSessionRecovered();
-    setPhase("portfolio");
-  };
-
   if (phase === "loading") {
-    return <div className="h-[100dvh] bg-bg" aria-hidden="true" />;
+    return <TerminalBootLoader onComplete={() => setPhase("portfolio")} />;
   }
 
-  if (phase === "portfolio") {
-    return <Terminal fs={fs} />;
-  }
-
-  return <SessionGate onComplete={handleGateComplete} />;
+  return <Terminal fs={fs} />;
 }
