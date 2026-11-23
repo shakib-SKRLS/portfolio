@@ -56,6 +56,14 @@ async function fetchRepos(): Promise<SlimRepo[]> {
 async function main() {
   mkdirSync(join(process.cwd(), "data"), { recursive: true });
   const repos = await fetchRepos();
+  if (repos.length === 0) {
+    // Never wipe the committed fallback (data/github-repos.json) when the
+    // API is unreachable or rate-limited: prebuild runs on every build.
+    console.warn(
+      "[fetch-repos] No repos fetched — keeping existing data/github-repos.json"
+    );
+    return;
+  }
   writeFileSync(OUTPUT, JSON.stringify(repos, null, 2));
   console.log(`[fetch-repos] Wrote ${repos.length} repos to ${OUTPUT}`);
 }
